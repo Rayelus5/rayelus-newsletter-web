@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rayelus Newsletter
 
-## Getting Started
+Una plataforma minimalista y moderna para blogging y gestión de newsletters, construida con las últimas tecnologías web.
 
-First, run the development server:
+## Características Principales
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Blog Público
+- Interfaz de lectura limpia y optimizada.
+- Diseño minimalista enfocado en el contenido.
+- SEO optimizado con metadatos dinámicos.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Newsletter
+- Sistema de suscripción y baja (unsubscribe) automático.
+- Envío de correos transaccionales y boletines masivos usando **Resend**.
+- Plantillas de correo personalizadas con React Email.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Panel de Administración
+- **Dashboard Protegido**: Autenticación con NextAuth y capa extra de seguridad por IP.
+- **Editor Rico (WYSIWYG)**: Integración avanzada con **Tiptap** para escribir posts con formato, listas, imágenes y bloques de código con resaltado de sintaxis.
+- Gestión completa de posts (Crear, Editar, Borrar, Publicar/Despublicar).
+- Envío de newsletters directamente desde el editor.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stack Tecnológico
 
-## Learn More
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
+- **Estilos**: [Tailwind CSS v4](https://tailwindcss.com/) + [Shadcn UI](https://ui.shadcn.com/)
+- **Base de Datos**: [PostgreSQL](https://www.postgresql.org/) (vía [Prisma ORM](https://www.prisma.io/))
+- **Emails**: [Resend](https://resend.com/) + [React Email](https://react.email/)
+- **Editor**: [Tiptap](https://tiptap.dev/)
 
-To learn more about Next.js, take a look at the following resources:
+## Arquitectura y Tipado
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Este proyecto sigue un enfoque moderno de desarrollo con TypeScript:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> **Nota sobre `types.ts`**:
+> No encontrarás un archivo centralizado `types.ts` en este proyecto. Esto es intencional:
+> 1. **Prisma**: Los tipos de la base de datos se generan automáticamente en `@prisma/client` basados en el esquema `schema.prisma`. Esto garantiza que los tipos siempre estén sincronizados con la DB.
+> 2. **Componentes**: Las interfaces específicas (como `PostCardProps`) se definen ("co-locan") en el mismo archivo del componente que las utiliza, promoviendo la modularidad.
 
-## Deploy on Vercel
+## Instalación y Uso
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Clonar el repositorio**:
+   ```bash
+   git clone <repo-url>
+   cd rayelus_newsletter
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Instalar dependencias**:
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**:
+   Crea un archivo `.env` con las claves necesarias (DATABASE_URL, RESEND_API_KEY, NEXTAUTH_SECRET, etc.).
+
+4. **Correr migraciones de base de datos**:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. **Iniciar servidor de desarrollo**:
+   ```bash
+   npm run dev
+   ```
+
+Abre [http://localhost:3000](http://localhost:3000) para ver la aplicación.
