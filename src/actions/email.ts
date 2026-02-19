@@ -14,27 +14,45 @@ export async function sendNewsletter(postId: string) {
             return { success: false, message: "Post no encontrado" }
         }
 
+
         const subscribers = await prisma.subscriber.findMany({
             where: { active: true },
         })
+
+        console.log(`Found ${subscribers.length} active subscribers.`)
 
         if (subscribers.length === 0) {
             return { success: false, message: "No hay suscriptores activos" }
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const emailPromises = subscribers.map((sub: any) =>
-            resend.emails.send({
-                from: 'Rayelus Newsletter <newsletter@rayelus.com>',
-                to: sub.email,
-                subject: post.title,
-                react: NewsletterEmailTemplate({ content: post.content, title: post.title }) as React.ReactElement,
-            })
-        )
+        const emailPromises = subscribers.map(async (sub: any) => {
+            try {
+                const data = await resend.emails.send({
+                    from: 'Rayelus Newsletter <onboarding@resend.dev>', // Use testing domain for now if custom domain not verified
+                    to: sub.email,
+                    subject: post.title,
+                    react: NewsletterEmailTemplate({ content: post.content, title: post.title }) as React.ReactElement,
+                })
+                console.log(`Email sent to ${sub.email}:`, data)
+                return { email: sub.email, status: 'fulfilled', data }
+            } catch (err) {
+                console.error(`Failed to send email to ${sub.email}:`, err)
+                return { email: sub.email, status: 'rejected', error: err }
+            }
+        })
 
-        await Promise.all(emailPromises)
+        const results = await Promise.all(emailPromises)
+        const successCount = results.filter(r => r.status === 'fulfilled' && !r.data?.error).length
+        const failureCount = results.filter(r => r.status === 'rejected' || r.data?.error).length
 
-        return { success: true, message: `Newsletter enviada a ${subscribers.length} suscriptores.` }
+        console.log(`Newsletter sending complete. Success: ${successCount}, Failed: ${failureCount}`)
+
+        if (successCount === 0 && failureCount > 0) {
+            return { success: false, message: `Fallo el envío a todos los suscriptores. Revisa los logs del servidor.` }
+        }
+
+        return { success: true, message: `Newsletter enviada a ${successCount} suscriptores. Fallaron: ${failureCount}.` }
 
     } catch (error) {
         console.error("Error sending newsletter:", error)
