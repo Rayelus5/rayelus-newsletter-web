@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 interface ClientEditorProps {
     initialData: any
     onSubmit: (formData: FormData) => Promise<any>
-    onSend: () => Promise<any>
+    onSend: (postId: string) => Promise<any>
 }
 
 export function ClientEditor({ initialData, onSubmit, onSend }: ClientEditorProps) {
@@ -55,10 +55,14 @@ export function ClientEditor({ initialData, onSubmit, onSend }: ClientEditorProp
 
     const handleSend = async () => {
         if (!confirm('¿Estás seguro de que quieres enviar este newsletter a todos los suscriptores activos?')) return
+        if (!initialData?.id) {
+            alert('Error: Guarda el post antes de enviarlo.')
+            return
+        }
 
         setSendPending(true)
         try {
-            await onSend()
+            await onSend(initialData.id)
             alert('Newsletter enviado correctamente')
         } catch (error) {
             console.error(error)

@@ -1,23 +1,7 @@
-import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
+import { NodeViewContent, NodeViewWrapper, NodeViewProps } from '@tiptap/react'
 import React from 'react'
 
-interface CodeBlockProps {
-    node: {
-        attrs: {
-            language: string
-        }
-    }
-    updateAttributes: (attrs: { language: string }) => void
-    extension: {
-        options: {
-            lowlight: {
-                listLanguages: () => string[]
-            }
-        }
-    }
-}
-
-export const CodeBlock = ({ node: { attrs: { language: defaultLanguage } }, updateAttributes, extension }: CodeBlockProps) => {
+export const CodeBlock = ({ node: { attrs: { language: defaultLanguage } }, updateAttributes, extension }: NodeViewProps) => {
     return (
         <NodeViewWrapper className="code-block relative group my-6 rounded-lg overflow-hidden border border-border bg-zinc-950 text-white">
             <div className="flex items-center justify-between px-4 py-2 bg-zinc-900 border-b border-white/10">
@@ -42,7 +26,7 @@ export const CodeBlock = ({ node: { attrs: { language: defaultLanguage } }, upda
                 </select>
             </div>
             <pre className="p-4 m-0 overflow-x-auto font-mono text-sm leading-relaxed">
-                <NodeViewContent as="code" />
+                <NodeViewContent />
             </pre>
         </NodeViewWrapper>
     )
