@@ -1,0 +1,17 @@
+import GitHub from "next-auth/providers/github"
+import type { NextAuthConfig } from "next-auth"
+
+export default {
+    providers: [GitHub],
+    callbacks: {
+        authorized({ auth, request: { nextUrl } }) {
+            const isLoggedIn = !!auth?.user;
+            const isOnAdmin = nextUrl.pathname.startsWith('/admin');
+            if (isOnAdmin) {
+                if (isLoggedIn) return true;
+                return false; // Redirect unauthenticated users to login page
+            }
+            return true;
+        },
+    }
+} satisfies NextAuthConfig
