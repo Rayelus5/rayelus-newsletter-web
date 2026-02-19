@@ -1,6 +1,7 @@
 # Rayelus Newsletter
 
 Una plataforma minimalista y moderna para blogging y gestión de newsletters, construida con las últimas tecnologías web.
+<img width="1018" height="557" alt="image" src="https://github.com/user-attachments/assets/645c0189-63e6-4f43-a12a-ee9e0f220a71" />
 
 ## Características Principales
 
@@ -37,6 +38,12 @@ Este proyecto sigue un enfoque moderno de desarrollo con TypeScript:
 > No encontrarás un archivo centralizado `types.ts` en este proyecto. Esto es intencional:
 > 1. **Prisma**: Los tipos de la base de datos se generan automáticamente en `@prisma/client` basados en el esquema `schema.prisma`. Esto garantiza que los tipos siempre estén sincronizados con la DB.
 > 2. **Componentes**: Las interfaces específicas (como `PostCardProps`) se definen ("co-locan") en el mismo archivo del componente que las utiliza, promoviendo la modularidad.
+
+## Capturas de pantalla
+
+<img width="1018" height="557" alt="image" src="https://github.com/user-attachments/assets/02115ede-b6b1-4791-b115-c0168a0c17f0" />
+<img width="1018" height="557" alt="image" src="https://github.com/user-attachments/assets/578d31f2-fe3a-4057-9a60-84c2215cffd5" />
+<img width="1018" height="557" alt="image" src="https://github.com/user-attachments/assets/0034c472-67af-42e8-b696-611734e759f8" />
 
 ## Instalación y Uso
 
