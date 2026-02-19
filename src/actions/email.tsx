@@ -3,6 +3,7 @@
 import prisma from '@/lib/prisma'
 import resend from '@/lib/resend'
 import { NewsletterEmailTemplate } from '@/components/email-template'
+import React from 'react'
 
 export async function sendNewsletter(postId: string) {
     try {
@@ -14,7 +15,6 @@ export async function sendNewsletter(postId: string) {
             return { success: false, message: "Post no encontrado" }
         }
 
-
         const subscribers = await prisma.subscriber.findMany({
             where: { active: true },
         })
@@ -25,14 +25,22 @@ export async function sendNewsletter(postId: string) {
             return { success: false, message: "No hay suscriptores activos" }
         }
 
+        // Dynamically import react-dom/server to avoid build issues with static imports in Server Actions
+        const { renderToStaticMarkup } = await import('react-dom/server')
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const emailPromises = subscribers.map(async (sub: any) => {
             try {
+                // Manually render to HTML to bypass Resend/React 19 issues
+                const emailHtml = renderToStaticMarkup(
+                    <NewsletterEmailTemplate content={post.content} title={post.title} />
+                )
+                
                 const data = await resend.emails.send({
                     from: 'Rayelus Newsletter <onboarding@resend.dev>', // Use testing domain for now if custom domain not verified
                     to: sub.email,
                     subject: post.title,
-                    react: NewsletterEmailTemplate({ content: post.content, title: post.title }) as React.ReactElement,
+                    html: `<!DOCTYPE html>${emailHtml}`,
                 })
                 console.log(`Email sent to ${sub.email}:`, data)
                 return { email: sub.email, status: 'fulfilled', data }
@@ -49,7 +57,7 @@ export async function sendNewsletter(postId: string) {
         console.log(`Newsletter sending complete. Success: ${successCount}, Failed: ${failureCount}`)
 
         if (successCount === 0 && failureCount > 0) {
-            return { success: false, message: `Fallo el envío a todos los suscriptores. Revisa los logs del servidor.` }
+             return { success: false, message: `Fallo el envío a todos los suscriptores. Revisa los logs del servidor.` }
         }
 
         return { success: true, message: `Newsletter enviada a ${successCount} suscriptores. Fallaron: ${failureCount}.` }
