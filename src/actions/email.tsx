@@ -35,9 +35,9 @@ export async function sendNewsletter(postId: string) {
                 const emailHtml = renderToStaticMarkup(
                     <NewsletterEmailTemplate content={post.content} title={post.title} />
                 )
-                
+
                 const data = await resend.emails.send({
-                    from: 'Rayelus Newsletter <onboarding@resend.dev>', // Use testing domain for now if custom domain not verified
+                    from: 'Rayelus Newsletter <contacto@rayelus.com>', // Use testing domain for now if custom domain not verified
                     to: sub.email,
                     subject: post.title,
                     html: `<!DOCTYPE html>${emailHtml}`,
@@ -57,7 +57,7 @@ export async function sendNewsletter(postId: string) {
         console.log(`Newsletter sending complete. Success: ${successCount}, Failed: ${failureCount}`)
 
         if (successCount === 0 && failureCount > 0) {
-             return { success: false, message: `Fallo el envío a todos los suscriptores. Revisa los logs del servidor.` }
+            return { success: false, message: `Fallo el envío a todos los suscriptores. Revisa los logs del servidor.` }
         }
 
         return { success: true, message: `Newsletter enviada a ${successCount} suscriptores. Fallaron: ${failureCount}.` }
