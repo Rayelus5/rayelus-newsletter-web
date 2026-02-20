@@ -13,7 +13,7 @@ interface PostCardProps {
 export function PostCard({ title, slug, excerpt, date }: PostCardProps) {
     return (
         <Link href={`/blog/${slug}`}>
-            <Card className="h-full hover:bg-zinc-800 transition-colors shadow-none bg-transparent hover:border-zinc-800 hover:text-white group px-5 border-4 border-gray-800">
+            <Card className="h-full hover:bg-zinc-800 transition-colors shadow-none bg-transparent hover:border-zinc-800 hover:text-white group px-5 border-2 border-gray-800">
                 <CardHeader className="px-0 pb-2">
                     <div className="text-sm text-muted-foreground mb-2">
                         {format(date, "d 'de' MMMM, yyyy", { locale: es })}

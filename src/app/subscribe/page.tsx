@@ -17,10 +17,10 @@ export default function SubscribePage() {
 
     return (
         <div className="flex justify-center items-center min-h-[70vh] px-4">
-            <Card className="w-full max-w-lg border-4 border-primary/20 shadow-2xl bg-card">
+            <Card className="w-full max-w-lg border-4 border-blue-500/40 shadow-2xl bg-card rounded-3xl">
                 <CardHeader className="space-y-4 text-center pb-2">
-                    <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit mb-2">
-                        <Mail className="w-8 h-8 text-primary" />
+                    <div className="mx-auto bg-blue-500/10 p-4 rounded-full w-fit mb-2">
+                        <Mail className="w-8 h-8 text-blue-500" />
                     </div>
                     <CardTitle className="text-3xl md:text-4xl font-extrabold tracking-tight">
                         Únete a la newsletter

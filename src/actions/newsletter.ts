@@ -6,6 +6,7 @@
 import { z } from 'zod'
 import prisma from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { headers } from 'next/headers'
 
 const subscribeSchema = z.object({
     email: z.string().email({ message: "Por favor, introduce un email válido." }),
@@ -35,6 +36,45 @@ export async function subscribe(prevState: SubscribeState, formData: FormData): 
     const { email } = validatedFields.data
 
     try {
+        const headersList = await headers()
+        const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
+
+        // Rate limiting check
+        if (ip !== 'unknown') {
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+
+            // Auto-limpieza: borrar registros antiguos para esta IP y endpoint (o todos los antiguos si lo prefieres, 
+            // pero por rendimiento mejor limpiar solo ocasionalmente o de forma asíncrona. Aquí lo hacemos antes de contar).
+            // Para no bloquear la respuesta, lo ejecutamos sin `await` o después, pero por simplicidad lo dejamos aquí.
+            await prisma.rateLimit.deleteMany({
+                where: {
+                    createdAt: { lt: oneHourAgo }
+                }
+            })
+
+            const count = await prisma.rateLimit.count({
+                where: {
+                    ip,
+                    endpoint: 'subscribe',
+                    createdAt: { gte: oneHourAgo }
+                }
+            })
+
+            if (count >= 5) {
+                return {
+                    success: false,
+                    message: "Has superado el límite de 5 peticiones por hora. Inténtalo más tarde."
+                }
+            }
+
+            await prisma.rateLimit.create({
+                data: {
+                    ip,
+                    endpoint: 'subscribe'
+                }
+            })
+        }
+
         const existingSubscriber = await prisma.subscriber.findUnique({
             where: { email },
         })
@@ -90,6 +130,43 @@ export async function unsubscribeAction(prevState: SubscribeState, formData: For
     }
 
     try {
+        const headersList = await headers()
+        const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
+
+        // Rate limiting check
+        if (ip !== 'unknown') {
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+
+            // Auto-limpieza de registros de hace más de una hora
+            await prisma.rateLimit.deleteMany({
+                where: {
+                    createdAt: { lt: oneHourAgo }
+                }
+            })
+
+            const count = await prisma.rateLimit.count({
+                where: {
+                    ip,
+                    endpoint: 'unsubscribe',
+                    createdAt: { gte: oneHourAgo }
+                }
+            })
+
+            if (count >= 5) {
+                return {
+                    success: false,
+                    message: "Has superado el límite de 5 peticiones por hora. Inténtalo más tarde."
+                }
+            }
+
+            await prisma.rateLimit.create({
+                data: {
+                    ip,
+                    endpoint: 'unsubscribe'
+                }
+            })
+        }
+
         await prisma.subscriber.update({
             where: { email },
             data: { active: false, unsubscribedAt: new Date() }

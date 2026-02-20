@@ -2,6 +2,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { ArrowLeft } from "lucide-react"
 
 export default async function AdminLayout({
     children,
@@ -20,22 +21,14 @@ export default async function AdminLayout({
 
     return (
         <div className="flex flex-col min-h-screen">
-            <header className="border-b bg-muted/40 px-6 py-4 flex items-center justify-between">
-                <Link href="/admin" className="font-bold text-lg">
-                    Newsletter Admin
+            <div className="absolute bottom-10 left-1/2 translate-x-[-50%] z-50 flex gap-4">
+                <Link href="/admin">
+                    <Button className="bg-blue-600 text-white border-2 border-blue-600 hover:bg-blue-700 hover:text-white cursor-pointer" variant="ghost" size="sm"><ArrowLeft className="mr-2 h-4 w-4" /> Volver a inicio </Button>
                 </Link>
-                <div className="flex gap-4">
-                    <Link href="/" target="_blank">
-                        <Button variant="ghost" size="sm">Ver Sitio</Button>
-                    </Link>
-                    <div className="text-sm font-medium flex items-center">
-                        {session?.user?.email || "Admin"}
-                    </div>
-                </div>
-            </header>
-            <main className="flex-1 p-6 lg:p-10">
+            </div>
+            <main className="flex-1 p-2 lg:py-10">
                 {children}
             </main>
-        </div>
+        </div >
     )
 }

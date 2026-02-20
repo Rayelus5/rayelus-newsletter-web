@@ -93,3 +93,13 @@ model Post {
 
   @@map("posts")
 }
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  ip        String
+  endpoint  String
+  createdAt DateTime @default(now())
+
+  @@index([ip, endpoint])
+  @@map("rate_limits")
+}

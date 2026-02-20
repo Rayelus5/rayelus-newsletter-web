@@ -31,7 +31,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <article className="py-10 space-y-8 animate-in fade-in duration-500">
             <div className="space-y-4">
                 <Link href="/blog" passHref>
-                    <Button variant="ghost" className="pl-0 hover:bg-transparent hover:text-primary mb-4">
+                    <Button variant="ghost" className="pl-0 hover:bg-transparent hover:text-primary mb-4 cursor-pointer">
                         <ArrowLeft className="mr-2 h-4 w-4" /> Volver al Blog
                     </Button>
                 </Link>

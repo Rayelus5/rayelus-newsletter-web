@@ -75,7 +75,7 @@ export default async function PostsPage() {
                                                 </Link>
                                             )}
                                             <Link href={`/admin/editor?id=${post.id}`}>
-                                                <Button variant="ghost" size="icon" title="Editar">
+                                                <Button className="cursor-pointer" variant="ghost" size="icon" title="Editar">
                                                     <Edit className="h-4 w-4" />
                                                 </Button>
                                             </Link>

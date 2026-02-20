@@ -11,16 +11,16 @@ export default async function AdminDashboard() {
     const postsCount = await prisma.post.count()
 
     const recentSubscribers = await prisma.subscriber.findMany({
-        take: 5,
+        take: 10,
         orderBy: { createdAt: 'desc' },
     })
 
     return (
         <div className="space-y-8">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
                 <Link href="/admin/editor">
-                    <Button>
+                    <Button className="bg-green-600 text-white border-2 border-green-600 hover:bg-green-700 hover:text-white cursor-pointer">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Nueva Publicación
                     </Button>

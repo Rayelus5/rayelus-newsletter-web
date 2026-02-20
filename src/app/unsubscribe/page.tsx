@@ -17,7 +17,7 @@ export default function UnsubscribePage() {
 
     return (
         <div className="flex justify-center items-center min-h-[70vh] px-4">
-            <Card className="w-full max-w-lg border-4 border-destructive/30 shadow-2xl">
+            <Card className="w-full max-w-lg border-4 border-destructive/30 shadow-2xl rounded-3xl">
                 <CardHeader className="space-y-4 text-center pb-2">
                     <div className="mx-auto bg-destructive/10 p-4 rounded-full w-fit mb-2">
                         <UserMinus className="w-8 h-8 text-destructive" />
